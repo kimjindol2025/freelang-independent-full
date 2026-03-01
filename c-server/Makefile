@@ -1,11 +1,12 @@
 CC      = gcc
 CFLAGS  = -Wall -Wextra -O2 -std=c99 -D_POSIX_C_SOURCE=200809L \
           -I./include -I./myos-lib/src
-LDFLAGS = -lsqlite3 -lssl -lcrypto -lpthread
+LDFLAGS = -lpthread
 
-# C Server 소스
+# C Server 소스 (Zero-Dependency: crypto.c + kvstore.c 포함)
 SRC = src/main.c src/server.c src/http.c src/router.c \
-      src/database.c src/auth.c src/storage.c src/logs.c
+      src/database.c src/auth.c src/storage.c src/logs.c \
+      src/crypto.c src/kvstore.c
 
 # MyOS_Lib 소스 (CRC32 + Serializer 포함)
 MYOS_SRC = myos-lib/src/mm.c myos-lib/src/vector.c myos-lib/src/hash.c \
@@ -21,7 +22,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJ) $(LDFLAGS)
-	@echo "✅ Build complete: $(TARGET) (with MyOS_Lib Phase D)"
+	@echo "✅ Build complete: $(TARGET) (Zero-Dependency: SHA256 + HMAC + KVStore)"
 	@ls -lh $(TARGET)
 
 %.o: %.c

@@ -148,7 +148,7 @@ static void handle_register(int client_fd, HttpRequest *req, AppContext *ctx) {
     hash_password(password, ctx->secret, password_hash);
 
     // 트랜잭션 시작
-    if (db_begin(db) < 0) {
+    if (db_transaction_begin(db) < 0) {
         http_respond(client_fd, 500,
                      "{\"error\":\"Database error\"}");
         return;
@@ -156,14 +156,14 @@ static void handle_register(int client_fd, HttpRequest *req, AppContext *ctx) {
 
     // 사용자 삽입
     if (db_insert_user(db, username, email, password_hash, "user") < 0) {
-        db_rollback(db);
+        db_transaction_rollback(db);
         http_respond(client_fd, 400,
                      "{\"error\":\"Username or email already exists\"}");
         return;
     }
 
     // 커밋
-    if (db_commit(db) < 0) {
+    if (db_transaction_commit(db) < 0) {
         http_respond(client_fd, 500,
                      "{\"error\":\"Database error\"}");
         return;
