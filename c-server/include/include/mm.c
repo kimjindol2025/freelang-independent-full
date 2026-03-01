@@ -11,7 +11,6 @@
 #include <sys/syscall.h>
 #include <linux/mman.h>
 #include <unistd.h>
-#include <stdlib.h>
 
 /* MAP_FAILED이 정의되지 않은 경우 */
 #ifndef MAP_FAILED
@@ -184,16 +183,10 @@ int mm_init(size_t requested_size) {
  *
  * Free-list에서 first-fit 탐색
  * 블록이 여유가 있으면 분할
- * mm_init이 호출되지 않으면 malloc 사용 (호환성)
  */
 void* mm_alloc(size_t size) {
-    if (size == 0) {
+    if (heap_base == NULL || size == 0) {
         return NULL;
-    }
-
-    /* mm_init이 호출되지 않은 경우 libc malloc 사용 */
-    if (heap_base == NULL) {
-        return malloc(size);
     }
 
     /* 요청 크기를 정렬 */
@@ -255,13 +248,7 @@ void* mm_alloc(size_t size) {
  * 인접한 블록과 병합 (coalescing)
  */
 void mm_free(void *ptr) {
-    if (ptr == NULL) {
-        return;
-    }
-
-    /* mm_init이 호출되지 않은 경우 libc free 사용 */
-    if (heap_base == NULL) {
-        free(ptr);
+    if (ptr == NULL || heap_base == NULL) {
         return;
     }
 

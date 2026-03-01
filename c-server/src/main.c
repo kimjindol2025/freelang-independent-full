@@ -54,9 +54,8 @@ int main(int argc, char *argv[]) {
     printf("FreeLang C Server - Phase 4: Application Layer (+ MyOS_Lib Integration)\n");
     printf("Starting server on port %d...\n\n", port);
 
-    /* Note: MyOS_Lib은 -nostdlib로 컴파일되어 있으므로
-     * C Server의 libc 환경에서는 개별 함수들만 사용 (Serializer, Hash, etc)
-     * 메모리는 C Server의 malloc 사용 */
+    /* Note: MyOS_Lib은 순수 C 라이브러리로 개별 함수들만 사용 (Hash, Vector, etc)
+     * 메모리 할당은 libc malloc/free 사용 (mm_alloc은 선택적) */
 
     // 신호 핸들러 등록
     signal(SIGINT, signal_handler);

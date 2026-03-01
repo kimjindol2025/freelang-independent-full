@@ -4,6 +4,7 @@
 #include "auth.h"
 #include "storage.h"
 #include "logs.h"
+#include "sql_api.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,6 +24,7 @@ static void handle_logs_get(int client_fd, HttpRequest *req, AppContext *ctx);
 static void handle_logs_add(int client_fd, HttpRequest *req, AppContext *ctx);
 static void handle_info(int client_fd, HttpRequest *req, AppContext *ctx);
 static void handle_version(int client_fd, HttpRequest *req, AppContext *ctx);
+static void handle_sql_execute_wrapper(int client_fd, HttpRequest *req, AppContext *ctx);
 
 // 라우트 구조체
 typedef struct {
@@ -32,7 +34,7 @@ typedef struct {
     int auth_required;
 } Route;
 
-// 라우트 테이블 (15개 엔드포인트)
+// 라우트 테이블 (16개 엔드포인트)
 static Route routes[] = {
     // 공개 API
     {"GET", "/health", handle_health, 0},
@@ -57,6 +59,9 @@ static Route routes[] = {
     {"GET", "/api/logs", handle_logs_get, 1},
     {"POST", "/api/logs", handle_logs_add, 1},
 
+    // SQL API (공개)
+    {"POST", "/api/sql/execute", handle_sql_execute_wrapper, 0},
+
     {NULL, NULL, NULL, 0}  // sentinel
 };
 
@@ -67,6 +72,11 @@ int router_init(void) {
 
 // 라우트 정리
 void router_cleanup(void) {
+}
+
+// SQL API 래퍼 함수
+static void handle_sql_execute_wrapper(int client_fd, HttpRequest *req, AppContext *ctx) {
+    handle_sql_execute(client_fd, req, ctx);
 }
 
 // 간단한 JSON 파서 헬퍼
