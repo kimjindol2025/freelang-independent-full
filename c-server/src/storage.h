@@ -11,11 +11,12 @@ typedef struct StorageItem {
     long updated_at;
 } StorageItem;
 
-// KV 저장소 (간단한 해시맵)
+// KV 저장소 (MyOS_Lib HashMap + 배열 하이브리드)
 typedef struct {
-    StorageItem *items;
+    StorageItem *items;         /* 배열 (호환성) */
     int count;
     int capacity;
+    void *_hash_map;            /* MyOS_Lib HashMap (가속화용) */
 } Storage;
 
 // 함수

@@ -4,6 +4,12 @@
 #include "storage.h"
 #include "logs.h"
 #include "../include/freelang.h"
+/* MyOS_Lib 통합 */
+#include "mm.h"
+#include "vector.h"
+#include "hash.h"
+#include "string.h"
+#include "list.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -45,8 +51,12 @@ int main(int argc, char *argv[]) {
         port = atoi(argv[1]);
     }
 
-    printf("FreeLang C Server - Phase 4: Application Layer\n");
+    printf("FreeLang C Server - Phase 4: Application Layer (+ MyOS_Lib Integration)\n");
     printf("Starting server on port %d...\n\n", port);
+
+    /* Note: MyOS_Lib은 -nostdlib로 컴파일되어 있으므로
+     * C Server의 libc 환경에서는 개별 함수들만 사용 (Serializer, Hash, etc)
+     * 메모리는 C Server의 malloc 사용 */
 
     // 신호 핸들러 등록
     signal(SIGINT, signal_handler);
