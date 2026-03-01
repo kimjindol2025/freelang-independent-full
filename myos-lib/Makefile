@@ -193,8 +193,19 @@ $(TEST_POOL_BIN): test_pool.o src/mm.o src/object_pool.o
 test-pool: $(TEST_POOL_BIN)
 	./$(TEST_POOL_BIN)
 
-test: test-runtime test-snapshot test-pool
+test_table.o: test_table.c
+	$(CC) $(CFLAGS) -Isrc -c $< -o $@
+
+TEST_TABLE_BIN = test_table
+$(TEST_TABLE_BIN): test_table.o src/mm.o src/table.o src/vector.o
+	$(CC) $(LDFLAGS) -o $@ $^
+	@echo "✅ Test binary created: $@"
+
+test-table: $(TEST_TABLE_BIN)
+	./$(TEST_TABLE_BIN)
+
+test: test-runtime test-snapshot test-pool test-table
 
 clean:
-	rm -f $(OBJ) test_runtime.o test_snapshot.o test_pool.o $(LIB) $(TEST_RUNTIME_BIN) $(TEST_SNAPSHOT_BIN) $(TEST_POOL_BIN)
+	rm -f $(OBJ) test_runtime.o test_snapshot.o test_pool.o test_table.o $(LIB) $(TEST_RUNTIME_BIN) $(TEST_SNAPSHOT_BIN) $(TEST_POOL_BIN) $(TEST_TABLE_BIN)
 	@echo "✅ Clean complete"

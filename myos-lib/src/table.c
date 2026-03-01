@@ -130,7 +130,8 @@ int table_delete_row(Table *table, size_t row_index) {
     }
 
     /* 마지막 요소 제거 */
-    vector_pop(table->rows);
+    void *dummy = NULL;
+    vector_pop(table->rows, &dummy);
     table->row_count--;
 
     return 0;
