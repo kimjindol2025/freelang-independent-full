@@ -1,0 +1,46 @@
+# Build artifacts
+bin/
+build/
+dist/
+*.o
+*.a
+*.so
+*.exe
+
+# Dependencies
+node_modules/
+kim_modules/
+.npm
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Data
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+tmp/
+temp/
+.tmp/
