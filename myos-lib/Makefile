@@ -4,9 +4,9 @@ CFLAGS_LIB = -nostdlib
 LDFLAGS =
 
 # 소스 파일
-SRC = src/mm.c src/vector.c src/hash.c src/string.c src/list.c src/serializer.c
+SRC = src/mm.c src/vector.c src/hash.c src/string.c src/list.c src/serializer.c src/table.c
 OBJ = $(SRC:.c=.o)
-HEADER = src/mm.h src/vector.h src/hash.h src/string.h src/list.h src/serializer.h
+HEADER = src/mm.h src/vector.h src/hash.h src/string.h src/list.h src/serializer.h src/table.h
 
 # 테스트
 TEST_MM_SRC = test_mm.c
