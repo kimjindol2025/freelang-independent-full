@@ -29,7 +29,7 @@ int db_init(const char *path, Database *out_db) {
     strcpy(users[0].username, "admin");
     strcpy(users[0].email, "admin@freelang.dev");
     strcpy(users[0].password_hash,
-           "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918");  /* SHA256("admin") */
+           "701818837884979ce5ffc542ffe469cea0958f1adbafc83f3e808dc5d5848cbb");  /* SHA256("admin" + "freelang-secret-key-2026") */
     strcpy(users[0].role, "admin");
     strcpy(users[0].created_at, "2026-03-01T00:00:00Z");
     users[0].id = 1;

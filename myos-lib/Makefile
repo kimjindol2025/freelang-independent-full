@@ -4,9 +4,9 @@ CFLAGS_LIB = -nostdlib
 LDFLAGS =
 
 # 소스 파일
-SRC = src/mm.c src/vector.c src/hash.c src/string.c src/list.c src/serializer.c src/table.c src/sql_parser.c
+SRC = src/mm.c src/vector.c src/hash.c src/string.c src/list.c src/serializer.c src/table.c src/sql_parser.c src/sql_executor.c
 OBJ = $(SRC:.c=.o)
-HEADER = src/mm.h src/vector.h src/hash.h src/string.h src/list.h src/serializer.h src/table.h src/sql_parser.h
+HEADER = src/mm.h src/vector.h src/hash.h src/string.h src/list.h src/serializer.h src/table.h src/sql_parser.h src/sql_executor.h
 
 # 테스트
 TEST_MM_SRC = test_mm.c
@@ -215,8 +215,19 @@ $(TEST_PARSER_BIN): test_parser.o src/mm.o src/sql_parser.o src/vector.o src/str
 test-parser: $(TEST_PARSER_BIN)
 	./$(TEST_PARSER_BIN)
 
-test: test-runtime test-snapshot test-pool test-table test-parser
+test_executor.o: test_executor.c
+	$(CC) $(CFLAGS) -Isrc -c $< -o $@
+
+TEST_EXECUTOR_BIN = test_executor
+$(TEST_EXECUTOR_BIN): test_executor.o src/mm.o src/sql_executor.o src/sql_parser.o src/table.o src/vector.o src/string.o
+	$(CC) $(LDFLAGS) -o $@ $^
+	@echo "✅ Test binary created: $@"
+
+test-executor: $(TEST_EXECUTOR_BIN)
+	./$(TEST_EXECUTOR_BIN)
+
+test: test-runtime test-snapshot test-pool test-table test-parser test-executor
 
 clean:
-	rm -f $(OBJ) test_runtime.o test_snapshot.o test_pool.o test_table.o test_parser.o $(LIB) $(TEST_RUNTIME_BIN) $(TEST_SNAPSHOT_BIN) $(TEST_POOL_BIN) $(TEST_TABLE_BIN) $(TEST_PARSER_BIN)
+	rm -f $(OBJ) test_runtime.o test_snapshot.o test_pool.o test_table.o test_parser.o test_executor.o $(LIB) $(TEST_RUNTIME_BIN) $(TEST_SNAPSHOT_BIN) $(TEST_POOL_BIN) $(TEST_TABLE_BIN) $(TEST_PARSER_BIN) $(TEST_EXECUTOR_BIN)
 	@echo "✅ Clean complete"
